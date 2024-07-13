@@ -1,4 +1,4 @@
-#CubeFreebies
+# CubeFreebies
 
 [CubeIdler](https://github.com/sffxzzp/CubeIdler) 失效之后的替代工具。
 
