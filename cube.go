@@ -10,6 +10,7 @@ import (
 	"net/http/cookiejar"
 	"net/url"
 	"os"
+	"strings"
 )
 
 type (
@@ -22,6 +23,7 @@ type (
 		Client   *http.Client
 		UserName string
 		Password string
+		DUserID  string
 	}
 	LoginRet struct {
 		ResultCode string
@@ -146,6 +148,15 @@ func (c *Cube) Login() bool {
 	}
 	var loginRet LoginRet
 	json.Unmarshal(res, &loginRet)
+	var values []string
+	pointUrl, _ := url.Parse("https://me.cubejoy.com/api/PersionalCenter/UserPointJsonp")
+	for _, cookie := range c.Client.Jar.Cookies(pointUrl) {
+		if cookie.Name == "AllCookie" {
+			values = strings.Split(cookie.Value, "|")
+			break
+		}
+	}
+	c.DUserID = values[6]
 	return loginRet.ResultCode == "1"
 }
 
@@ -160,6 +171,13 @@ func (c *Cube) OpenBoxes() {
 	} else {
 		fmt.Printf("Case already opened or no cases available\n\n")
 	}
+}
+
+func (c *Cube) GetUserPoint() {
+	fmt.Println("Getting user points...")
+	res := c.httpGet("https://me.cubejoy.com/api/PersionalCenter/UserPointJsonp?jsonpCallBack=userpoint&duserid=" + c.DUserID)
+	res = res[10 : len(res)-1]
+	fmt.Printf("User Points: %s\n", string(res))
 }
 
 func (c *Cube) inIntArray(array []int, target int) bool {

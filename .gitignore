@@ -17,3 +17,4 @@
 # Other files
 .vscode
 *.bat
+config.json

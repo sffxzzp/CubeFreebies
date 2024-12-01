@@ -11,6 +11,7 @@ func main() {
 	if cube.Login() {
 		fmt.Println("Login success!")
 		cube.OpenBoxes()
+		cube.GetUserPoint()
 		notOwned := cube.CheckFreeGames()
 		for _, game := range notOwned {
 			if !cube.GetFreeGame(game) {
